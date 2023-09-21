@@ -1,13 +1,21 @@
 import React from "react";
-import { StyleSheet, Image } from "react-native";
+import { StyleSheet, Image, Pressable } from "react-native";
+import { router } from "expo-router";
 import { Text, View } from "./Themed";
 import book from "../assets/images/book.jpg";
 import ok from "../assets/images/ok.jpg";
 import { CourseType } from "../types/types";
 
 export default function CourseInfo({ course }: { course: CourseType }) {
+    function goToSign(course: CourseType) {
+        console.log("GoToSign");
+        console.log(course);
+        router.replace("/signature");
+    }
+
+
   return (
-    <View style={styles.container}>
+    <Pressable style={styles.container} onPress={() => goToSign(course)}>
       <Image source={book} style={{ width: 60,height:60  }}/>
       <View style={styles.containerInfo}>
         <Text style={styles.title}>{course.name}</Text>
@@ -16,7 +24,7 @@ export default function CourseInfo({ course }: { course: CourseType }) {
         </Text>
       </View>
       <Image source={ok} style={{ width: 30,height:30 }} />
-    </View>
+    </Pressable>
   );
 }
 

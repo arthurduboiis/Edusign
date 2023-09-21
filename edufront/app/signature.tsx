@@ -17,26 +17,21 @@ const Signature: React.FC<Props> = () => {
     router.replace("/scan")
   };
 
-  const handleEmpty = () => {
-    console.log("Empty");
-  };
+  
 
   const handleClear = () => {
     console.log("clear success!");
   };
 
-  const handleEnd = () => {
-    ref.current?.readSignature();
-  };
+
 
   return (
     <View style={styles.container} >
       <Text style={styles.title}>Signature</Text>
       <SignatureScreen
         ref={ref}
-        onEnd={handleEnd}
         onOK={handleSignature}
-        onEmpty={handleEmpty}
+     
         onClear={handleClear}
         autoClear={false}
       />

@@ -44,7 +44,7 @@ const cards = [
 export default function LoginPage() {
   function login() {
     console.log("login");
-    router.replace("/home");
+    router.replace("/admin");
   }
 
   const renderCard = (views: CardType[]): React.JSX.Element[] => {

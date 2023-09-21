@@ -15,7 +15,7 @@ function TabBarIcon(props: {
   return <FontAwesome size={28} style={{ marginBottom: -3 }} {...props} />;
 }
 
-function HelpBarIcon() {
+export function HelpBarIcon() {
   return (
     <Link href="https://help.edusign.fr/fr/" asChild>
       <Pressable>
@@ -31,7 +31,7 @@ function HelpBarIcon() {
   )
 }
 
-function HeaderLeftIcon() {
+export function HeaderLeftIcon() {
 
   return <Image source={logoEdu} style={{ width: 25, height: 25, marginLeft: 15 }} />
 }

@@ -9,4 +9,19 @@ type CourseType = {
     description: string;
 }
 
-export type { CourseType };
+type StudentType = {
+    name: string;
+    lastName: string;
+    password: string;
+    email: string;
+    id: number;
+}
+
+type AdminType = {
+    id: string,
+    name: string,
+    lastname: string,
+    course_id: number
+}
+
+export type { CourseType, AdminType, StudentType };

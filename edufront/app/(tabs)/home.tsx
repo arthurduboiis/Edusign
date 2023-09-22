@@ -9,18 +9,30 @@ const courses = [
     name: "Starter Pack",
     hourStart: "10:00",
     hourEnd: "11:00",
+    room: 1,
+    teacher: "M. Dupont",
+    date: "2021-03-01",
+    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec auctor, nisl eget ultricies ultrices, nunc nisl ultricies nunc, vitae ultricies nisl nunc eget nisl. Nulla facilisi. Sed euismod, nisl eget ultricies ultrices, nunc nisl ultricies nunc, vitae ultricies nisl nunc eget nisl. Nulla facilisi. Sed euismod",
   },
   {
     id: 2,
     name: "English",
     hourStart: "11:00",
     hourEnd: "12:00",
+    room: 2,
+    teacher: "M. Dupont",
+    date: "2021-03-01",
+    description: "copilot pue"
   },
   {
     id: 3,
     name: "Math",
     hourStart: "12:00",
     hourEnd: "13:00",
+    room: 3,
+    teacher: "M. Dupont",
+    date: "2021-03-01",
+    description: "copilot pue"
   },
 ];
 

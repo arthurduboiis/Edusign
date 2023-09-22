@@ -20,7 +20,7 @@ export default function CourseInfo({ course }: { course: CourseType }) {
       <View style={styles.containerInfo}>
         <Text style={styles.title}>{course.name}</Text>
         <Text style={styles.date}>
-          {course.hourStart} - {course.hourEnd}
+          {course.startingDate} - {course.endingDate}
         </Text>
       </View>
       <Image source={ok} style={{ width: 30,height:30 }} />

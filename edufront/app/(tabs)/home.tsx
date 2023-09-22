@@ -1,3 +1,4 @@
+import React from "react";
 import { StyleSheet } from "react-native";
 import { Text, View } from "../../components/Themed";
 import CourseInfo from "../../components/CourseInfo";
@@ -7,8 +8,8 @@ const courses = [
   {
     id: 1,
     name: "Starter Pack",
-    hourStart: "10:00",
-    hourEnd: "11:00",
+    startingDate: "10:00",
+    endingDate: "11:00",
     room: 1,
     teacher: "M. Dupont",
     date: "2021-03-01",
@@ -17,8 +18,8 @@ const courses = [
   {
     id: 2,
     name: "English",
-    hourStart: "11:00",
-    hourEnd: "12:00",
+    startingDate: "11:00",
+    endingDate: "12:00",
     room: 2,
     teacher: "M. Dupont",
     date: "2021-03-01",
@@ -27,8 +28,8 @@ const courses = [
   {
     id: 3,
     name: "Math",
-    hourStart: "12:00",
-    hourEnd: "13:00",
+    startingDate: "12:00",
+    endingDate: "13:00",
     room: 3,
     teacher: "M. Dupont",
     date: "2021-03-01",
@@ -37,6 +38,32 @@ const courses = [
 ];
 
 export default function TabOneScreen() {
+
+  React.useEffect(() => {
+    fetch("http://10.104.130.133:8000/courses", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        },
+        })
+        .then((response) => {
+          if( response.status === 200 ) {
+            return response.json();
+          } else {
+            console.log("error not courses found");
+          }
+        })
+        .then((json) => {
+          console.log(json);
+          // setCourses(json);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+        
+  }, []);
+
+
   const renderCourse = (views: CourseType[]): React.JSX.Element[] => {
     return views.map((course: CourseType) => {
       return <CourseInfo key={course.id} course={course} />;

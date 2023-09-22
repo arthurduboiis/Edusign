@@ -11,6 +11,8 @@ import {
   ImageSourcePropType,
 } from "react-native";
 import { router } from "expo-router";
+import jwt_decode from "jwt-decode";
+
 import { SwiperFlatList } from "react-native-swiper-flatlist";
 import edusign from "../assets/images/edusign.png";
 import flatconnection from "../assets/images/flatconnection.png";
@@ -19,6 +21,9 @@ import flatcalendar from "../assets/images/flatcalendar.jpg";
 
 const CARD_WIDTH = Dimensions.get("window").width - 20;
 const CARD_HEIGHT = Dimensions.get("window").height * 0.35;
+
+import { AdminType } from "../types/types";
+import { StudentType } from "../types/types";
 
 type CardType = {
   name: string;
@@ -42,9 +47,96 @@ const cards = [
 ];
 
 export default function LoginPage() {
+
+  const [ email, setEmail ] = React.useState<string>("");
+  const [ password, setPassword ] = React.useState<string>("");
+  const [ currentUser, setCurrentUser ] = React.useState<AdminType | StudentType | null>(null);
+  const [ isLogged, setIsLogged ] = React.useState<boolean>(false);
+
+
+  React.useEffect(() => {
+    console.log("isLogged", isLogged);
+    if (isLogged) {
+      fetch("http://10.104.130.133:8000/students/mail/" + email, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((response) => {
+          if( response.status === 200 ) {
+            return response.json();
+          } else {
+            searchAdmin();
+          }
+        })
+        .then((json) => {
+          console.log("is a student")
+          setCurrentUser(json);
+          router.replace("/home")
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+  }, [isLogged]);
+
+  const searchAdmin = async () => {
+    fetch("http://10.104.130.133:8000/admins/mail/" + email, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => {
+        if( response.status === 200 ) {
+          return response.json();
+        } else {
+          console.log("error not admins found for this email");
+        }
+      })
+      .then((json) => {
+        console.log("is an admin")
+        setCurrentUser(json);
+        router.replace("/admin")
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+
+  const loginFetch = async () => {
+    fetch("http://10.104.130.133:8000/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: email,
+        password: password,
+    })
+  })
+    .then((response) => {
+      if( response.status === 200 ) {
+        return response.json();
+      } else {
+        console.log("error cannot be logged in");
+      }
+    })
+    .then((json) => {
+      console.log(json)
+      setIsLogged(true);
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+  }
+
   function login() {
     console.log("login");
-    router.replace("/admin");
+    loginFetch();
+    
+ 
   }
 
   const renderCard = (views: CardType[]): React.JSX.Element[] => {
@@ -80,8 +172,8 @@ export default function LoginPage() {
         </SwiperFlatList>
       </View>
       <View style={styles.logincontainer}>
-        <TextInput style={styles.input} placeholder="Student Email" />
-        <TextInput style={styles.input} placeholder="password" />
+        <TextInput style={styles.input} placeholder="Student Email" value={email} onChangeText={setEmail} />
+        <TextInput style={styles.input} placeholder="password" value={password} onChangeText={setPassword}/>
         <Pressable style={styles.loginButton} onPress={login}>
           <Text>Login</Text>
         </Pressable>

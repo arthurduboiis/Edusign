@@ -66,14 +66,19 @@ export default function LoginPage() {
         .then((response) => {
           if( response.status === 200 ) {
             return response.json();
-          } else {
+          } else if ( response.status === 404 ) {
+            console.log("error not students found for this email");
             searchAdmin();
+            return null;
           }
+          else return null;
         })
         .then((json) => {
-          console.log("is a student")
-          setCurrentUser(json);
-          router.replace("/home")
+          if (json){
+            setCurrentUser(json);
+            router.replace("/home")
+          }
+         
         })
         .catch((error) => {
           console.error(error);
@@ -191,6 +196,7 @@ const styles = StyleSheet.create({
   },
   logincontainer: {
     alignItems: "center",
+    marginBottom: 300,
     justifyContent: "center",
   },
   swipebox: {

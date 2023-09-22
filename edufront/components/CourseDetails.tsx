@@ -15,7 +15,7 @@ export default function CourseDetails({ course }: { course: CourseType }) {
         <Image source={horloge} style={{ width: 60, height: 60 }} />
         <View style={styles.containerInfo}>
           <Text style={styles.title}>
-            {course.hourStart} - {course.hourEnd}
+            {course.startingDate} - {course.endingDate}
           </Text>
           <Text style={styles.date}>{course.date}</Text>
         </View>

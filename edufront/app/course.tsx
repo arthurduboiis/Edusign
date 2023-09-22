@@ -12,8 +12,8 @@ const course = {
   name: "Math",
   teacher: "Mr. Dupont",
   date: "2021-01-01",
-  hourStart: "10:00",
-  hourEnd: "12:00",
+  startingDate: "10:00",
+  endingDate: "12:00",
   room: 1,
   description: "Math course",
 };

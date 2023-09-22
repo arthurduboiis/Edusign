@@ -5,25 +5,21 @@ import {
   StyleSheet,
   Image,
   TextInput,
-  ScrollView,
   Dimensions,
-  Platform,
   ImageSourcePropType,
 } from "react-native";
 import { router } from "expo-router";
-import jwt_decode from "jwt-decode";
 
 import { SwiperFlatList } from "react-native-swiper-flatlist";
 import edusign from "../assets/images/edusign.png";
 import flatconnection from "../assets/images/flatconnection.png";
 import flatcheck from "../assets/images/flatcheck.png";
 import flatcalendar from "../assets/images/flatcalendar.jpg";
+import { UserContext } from "../context/UserContext";
+import { AdminType, StudentType, UserContextType } from "../types/types";
 
 const CARD_WIDTH = Dimensions.get("window").width - 20;
 const CARD_HEIGHT = Dimensions.get("window").height * 0.35;
-
-import { AdminType } from "../types/types";
-import { StudentType } from "../types/types";
 
 type CardType = {
   name: string;
@@ -32,30 +28,25 @@ type CardType = {
 };
 
 const cards = [
-  { name: "Scan It",
+  {
+    name: "Scan It",
     description: "Scan your document with your phone camera",
-    imgsrc: flatconnection
+    imgsrc: flatconnection,
   },
-  { name: "Check It",
-    description: "Check your document",
-    imgsrc: flatcheck
-  },
-  { name: "Manage", 
-    description: "Manage your document",
-    imgsrc: flatcalendar
-  }
+  { name: "Check It", description: "Check your document", imgsrc: flatcheck },
+  { name: "Manage", description: "Manage your document", imgsrc: flatcalendar },
 ];
 
 export default function LoginPage() {
+  const [email, setEmail] = React.useState<string>("");
+  const [password, setPassword] = React.useState<string>("");
+  const [isLogged, setIsLogged] = React.useState<boolean>(false);
 
-  const [ email, setEmail ] = React.useState<string>("");
-  const [ password, setPassword ] = React.useState<string>("");
-  const [ currentUser, setCurrentUser ] = React.useState<AdminType | StudentType | null>(null);
-  const [ isLogged, setIsLogged ] = React.useState<boolean>(false);
-
+  const { currentUser, setCurrentUser } = React.useContext(
+    UserContext
+  ) as UserContextType;
 
   React.useEffect(() => {
-    console.log("isLogged", isLogged);
     if (isLogged) {
       fetch("http://10.104.130.133:8000/students/mail/" + email, {
         method: "GET",
@@ -64,21 +55,19 @@ export default function LoginPage() {
         },
       })
         .then((response) => {
-          if( response.status === 200 ) {
+          if (response.status === 200) {
             return response.json();
-          } else if ( response.status === 404 ) {
+          } else if (response.status === 404) {
             console.log("error not students found for this email");
             searchAdmin();
             return null;
-          }
-          else return null;
+          } else return null;
         })
         .then((json) => {
-          if (json){
+          if (json) {
             setCurrentUser(json);
-            router.replace("/home")
+            router.replace("/home");
           }
-         
         })
         .catch((error) => {
           console.error(error);
@@ -94,21 +83,21 @@ export default function LoginPage() {
       },
     })
       .then((response) => {
-        if( response.status === 200 ) {
+        if (response.status === 200) {
           return response.json();
         } else {
           console.log("error not admins found for this email");
         }
       })
       .then((json) => {
-        console.log("is an admin")
+        console.log("is an admin");
         setCurrentUser(json);
-        router.replace("/admin")
+        router.replace("/admin");
       })
       .catch((error) => {
         console.error(error);
       });
-  }
+  };
 
   const loginFetch = async () => {
     fetch("http://10.104.130.133:8000/login", {
@@ -119,29 +108,27 @@ export default function LoginPage() {
       body: JSON.stringify({
         email: email,
         password: password,
+      }),
     })
-  })
-    .then((response) => {
-      if( response.status === 200 ) {
-        return response.json();
-      } else {
-        console.log("error cannot be logged in");
-      }
-    })
-    .then((json) => {
-      console.log(json)
-      setIsLogged(true);
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-  }
+      .then((response) => {
+        if (response.status === 200) {
+          return response.json();
+        } else {
+          console.log("error cannot be logged in");
+        }
+      })
+      .then((json) => {
+        console.log(json);
+        setIsLogged(true);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
 
   function login() {
     console.log("login");
     loginFetch();
-    
- 
   }
 
   const renderCard = (views: CardType[]): React.JSX.Element[] => {
@@ -151,7 +138,7 @@ export default function LoginPage() {
       return (
         <View style={cardStyle} key={card.name}>
           <Text style={styles.title}>{card.name}</Text>
-          <Text style={styles.text} >{card.description}</Text>
+          <Text style={styles.text}>{card.description}</Text>
           <Image source={card.imgsrc} />
         </View>
       );
@@ -171,14 +158,23 @@ export default function LoginPage() {
           data={cards}
           paginationStyleItemActive={{ backgroundColor: "#FFC107" }}
           paginationStyleItemInactive={{ backgroundColor: "lightgray" }}
-
         >
           {renderCard(cards)}
         </SwiperFlatList>
       </View>
       <View style={styles.logincontainer}>
-        <TextInput style={styles.input} placeholder="Student Email" value={email} onChangeText={setEmail} />
-        <TextInput style={styles.input} placeholder="password" value={password} onChangeText={setPassword}/>
+        <TextInput
+          style={styles.input}
+          placeholder="Student Email"
+          value={email}
+          onChangeText={setEmail}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="password"
+          value={password}
+          onChangeText={setPassword}
+        />
         <Pressable style={styles.loginButton} onPress={login}>
           <Text>Login</Text>
         </Pressable>

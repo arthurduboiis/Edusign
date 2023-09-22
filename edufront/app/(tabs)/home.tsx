@@ -2,71 +2,60 @@ import React from "react";
 import { StyleSheet } from "react-native";
 import { Text, View } from "../../components/Themed";
 import CourseInfo from "../../components/CourseInfo";
-import { CourseType } from "../../types/types";
+import { CourseType, UserContextType } from "../../types/types";
+import { UserContext } from "../../context/UserContext";
 
-const courses = [
-  {
-    id: 1,
-    name: "Starter Pack",
-    startingDate: "10:00",
-    endingDate: "11:00",
-    room: 1,
-    teacher: "M. Dupont",
-    date: "2021-03-01",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec auctor, nisl eget ultricies ultrices, nunc nisl ultricies nunc, vitae ultricies nisl nunc eget nisl. Nulla facilisi. Sed euismod, nisl eget ultricies ultrices, nunc nisl ultricies nunc, vitae ultricies nisl nunc eget nisl. Nulla facilisi. Sed euismod",
-  },
-  {
-    id: 2,
-    name: "English",
-    startingDate: "11:00",
-    endingDate: "12:00",
-    room: 2,
-    teacher: "M. Dupont",
-    date: "2021-03-01",
-    description: "copilot pue"
-  },
-  {
-    id: 3,
-    name: "Math",
-    startingDate: "12:00",
-    endingDate: "13:00",
-    room: 3,
-    teacher: "M. Dupont",
-    date: "2021-03-01",
-    description: "copilot pue"
-  },
-];
 
 export default function TabOneScreen() {
+  const [courses, setCourses] = React.useState<CourseType[]>([]);
+  const { currentUser, setCurrentUser } = React.useContext(UserContext) as UserContextType;
+  const [isPresent, setIsPresent] = React.useState<boolean>(false);
 
   React.useEffect(() => {
     fetch("http://10.104.130.133:8000/courses", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
+      },
+    })
+      .then((response) => {
+        if (response.status === 200) {
+          return response.json();
+        } else {
+          console.log("error not courses found");
+        }
+      })
+      .then((json) => {
+        console.log(json);
+        setCourses(json);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
+
+  const renderCourse = (views: CourseType[]): React.JSX.Element[] => {
+    return views.map((course: CourseType) => {
+      fetch(`http://10.104.130.133:8000/get_presence/${currentUser.id}/${course.id}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
         },
-        })
+      })
         .then((response) => {
-          if( response.status === 200 ) {
+          if (response.status === 200) {
             return response.json();
           } else {
             console.log("error not courses found");
           }
         })
         .then((json) => {
-          console.log(json);
-          // setCourses(json);
+          setIsPresent(json.presence);
         })
         .catch((error) => {
           console.error(error);
         });
-        
-  }, []);
-
-
-  const renderCourse = (views: CourseType[]): React.JSX.Element[] => {
-    return views.map((course: CourseType) => {
-      return <CourseInfo key={course.id} course={course} />;
+      return <CourseInfo key={course.id} course={course} prenset={isPresent}/>;
     });
   };
 
@@ -94,7 +83,7 @@ const styles = StyleSheet.create({
   header: {
     flex: 1,
     flexBasis: 2,
-    maxHeight:70,
+    maxHeight: 70,
     alignItems: "flex-start",
     justifyContent: "flex-start",
     marginTop: 20,

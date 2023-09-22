@@ -2,15 +2,14 @@ import React from "react";
 import { StyleSheet, Image, Pressable, Button } from "react-native";
 import { router } from "expo-router";
 import { Text, View } from "../components/Themed";
-import SvgQRCode from 'react-native-qrcode-svg';
+import SvgQRCode from "react-native-qrcode-svg";
 
 function Simple() {
-  return <SvgQRCode value="http://example.com" />;
+  return <SvgQRCode value="789" />;
 }
 
 export default function Admin() {
   const [openQRCode, setOpenQRCode] = React.useState(false);
-
 
   function createQRCode() {
     console.log("createQRCode");
@@ -21,8 +20,12 @@ export default function Admin() {
       <Pressable onPress={() => createQRCode()} style={styles.buttonBack}>
         <Text style={styles.text}> Create a QR code </Text>
       </Pressable>
-      {openQRCode && (<View><Text style={styles.date}>QR code</Text><Simple /></View>)}
-      
+      {openQRCode && (
+        <View>
+          <Text style={styles.date}>QR code</Text>
+          <Simple />
+        </View>
+      )}
     </View>
   );
 }

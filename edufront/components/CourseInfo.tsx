@@ -6,24 +6,30 @@ import book from "../assets/images/book.jpg";
 import ok from "../assets/images/ok.jpg";
 import { CourseType } from "../types/types";
 
-export default function CourseInfo({ course }: { course: CourseType }) {
-    function goToSign(course: CourseType) {
-        console.log("GoToSign");
-        console.log(course);
-        router.replace("/signature");
-    }
+import { useNavigation } from "@react-navigation/native";
 
+export default function CourseInfo({ course }: { course: CourseType }, {isPresent}: {isPresent: boolean}}) {
+  const navigation = useNavigation();
+  function goToSign(course: CourseType) {
+    console.log("GoToSign");
+    console.log(course);
+    router.push({
+      pathname: "/course",
+      params: { courseId: course.id, isScanned: false },
+    } as never);
+  }
 
   return (
     <Pressable style={styles.container} onPress={() => goToSign(course)}>
-      <Image source={book} style={{ width: 60,height:60  }}/>
+      <Image source={book} style={{ width: 60, height: 60 }} />
       <View style={styles.containerInfo}>
         <Text style={styles.title}>{course.name}</Text>
         <Text style={styles.date}>
           {course.startingDate} - {course.endingDate}
         </Text>
       </View>
-      <Image source={ok} style={{ width: 30,height:30 }} />
+      {isPresent && <Image source={ok} style={{ width: 30, height: 30 }} />}
+      
     </Pressable>
   );
 }

@@ -1,5 +1,5 @@
 import React from "react";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { StyleSheet, Button } from "react-native";
 import { Camera, CameraType } from "expo-camera";
 import { BarCodeScanner } from "expo-barcode-scanner";
@@ -16,6 +16,9 @@ export default function Scan() {
   const [type, setType] = React.useState(CameraType.back);
   const [permission, requestPermission] = Camera.useCameraPermissions();
   const [scanned, setScanned] = React.useState(false);
+
+  const { courseId } = useLocalSearchParams();
+
   React.useEffect(() => {
     const getBarCodeScannerPermissions = async () => {
       const { status } = await BarCodeScanner.requestPermissionsAsync();
@@ -27,8 +30,11 @@ export default function Scan() {
 
   const handleBarCodeScanned = ({ type, data }: BarCodeData) => {
     setScanned(true);
-    alert(`Bar code with type ${type} and data ${data} has been scanned!`);
-    router.replace("/course")
+    alert(`You are present !`);
+    router.push({
+      pathname: "/course",
+      params: { courseId: courseId, isScanned: true },
+    } as never);
   };
 
   if (hasPermission === null) {

@@ -1,13 +1,19 @@
 import { StyleSheet, Image, Pressable } from "react-native";
+import React from "react";
 import avatar from "../../assets/images/avatar.png";
 
 import EditScreenInfo from "../../components/EditScreenInfo";
 import { Text, View } from "../../components/Themed";
 
+import { UserContext } from "../../context/UserContext";
+import { UserContextType } from "../../types/types";
+
 export default function TabProfileScreen() {
   const onPress = () => {
     alert("You have been logged out");
   };
+
+  const { currentUser, setCurrentUser } = React.useContext(UserContext) as UserContextType;
 
   return (
     <View style={styles.container}>
@@ -17,19 +23,25 @@ export default function TabProfileScreen() {
         source={avatar}
         style={{ width: 100, height: 100, marginLeft: 15 }}
       />
-      <Text style={styles.title}>Arthur DUBOIS</Text>
-      <View style={styles.content}>
-        <Text style={styles.textPlaceHolder}>User name</Text>
-        <Text style={styles.text}>adubois195</Text>
-        <Text style={styles.textPlaceHolder}>Email</Text>
-        <Text style={styles.text}>arthur.dubois@my-digital-school.org</Text>
-        <Text style={styles.textPlaceHolder}>Password</Text>
-        <Text style={styles.text}>**********</Text>
-
-        <Pressable style={styles.button} onPress={onPress}>
-          <Text style={styles.buttonText}>Log out</Text>
-        </Pressable>
-      </View>
+      { currentUser && (
+        <View style={styles.content}>
+            <Text style={styles.title}>{currentUser.name} {currentUser.lastName}</Text>
+            <View style={styles.content}>
+              <Text style={styles.textPlaceHolder}>User name</Text>
+              <Text style={styles.text}>{currentUser.name}</Text>
+              <Text style={styles.textPlaceHolder}>Email</Text>
+              <Text style={styles.text}>{currentUser.email}</Text>
+              <Text style={styles.textPlaceHolder}></Text>
+              <Text style={styles.text} >{currentUser.password}</Text>
+      
+              <Pressable style={styles.button} onPress={onPress}>
+                <Text style={styles.buttonText}>Log out</Text>
+              </Pressable>
+            </View>
+          </View>
+          )
+        }
+  
     </View>
   );
 }

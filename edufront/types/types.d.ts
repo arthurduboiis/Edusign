@@ -7,6 +7,7 @@ type CourseType = {
     date: string;
     endingDate: string;
     description: string;
+    studentsIds: number[];
 }
 
 type StudentType = {
@@ -20,8 +21,15 @@ type StudentType = {
 type AdminType = {
     id: string,
     name: string,
-    lastname: string,
+    lastName: string,
+    password: string,
+    email: string,
     course_id: number
 }
 
-export type { CourseType, AdminType, StudentType };
+type UserContextType = {
+    currentUser: StudentType | AdminType | null;
+    setCurrentUser: (user: StudentType | AdminType | null) => void;
+}
+
+export type { CourseType, AdminType, StudentType, UserContextType };
